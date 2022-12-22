@@ -68,6 +68,7 @@ public class ClassController {
             @PathVariable("pageSize") Long pageSize,
             @PathVariable("pageInfo") Long pageInfo
     ) {
+        Page<Class> classPage = new Page<>();
         Page<Class> page = new Page(pageSize, pageInfo);
         IPage<Class> pageList = classService.page(page, null);
         long total = pageList.getTotal();
