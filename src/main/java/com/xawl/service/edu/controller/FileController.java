@@ -7,6 +7,9 @@ import com.xawl.service.edu.service.FileService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.slf4j.ILoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,7 +22,7 @@ import java.io.InputStream;
 @RestController
 @RequestMapping("/api/oss/file")
 public class FileController {
-
+    private Logger log = LoggerFactory.getLogger(FileController.class);
     @Resource
     private FileService fileService;
 
@@ -43,7 +46,7 @@ public class FileController {
             @ApiParam(value = "模块", required = true)
             @RequestParam("module") String module){
         try{
-
+            log.info("文件上传:" + module);
             InputStream inputStream = file.getInputStream();
             String originalFilename = file.getOriginalFilename();
             String uploadUrl = fileService.upload(inputStream, module, originalFilename);

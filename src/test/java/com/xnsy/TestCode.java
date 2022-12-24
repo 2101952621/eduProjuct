@@ -35,7 +35,7 @@ public class TestCode {
 
         // 3、数据源配置
         DataSourceConfig dsc = new DataSourceConfig();
-        dsc.setUrl("jdbc:mysql://localhost:3306/guli?serverTimezone=GMT%2B8");
+        dsc.setUrl("jdbc:mysql://localhost:3306/edu?serverTimezone=GMT%2B8");
         dsc.setDriverName("com.mysql.cj.jdbc.Driver");
         dsc.setUsername("root");
         dsc.setPassword("root");
@@ -45,7 +45,7 @@ public class TestCode {
         // 4、包配置
         PackageConfig pc = new PackageConfig();
         pc.setModuleName("edu"); //模块名
-        pc.setParent("com.xnsy.service.edu");
+        pc.setParent("com.xawl.service");
         pc.setController("controller");
         pc.setEntity("entity");
         pc.setService("service");
@@ -54,7 +54,7 @@ public class TestCode {
 
         // 5、策略配置
         StrategyConfig strategy = new StrategyConfig();
-        strategy.setInclude("edu_student_class");
+        strategy.setInclude("edu_class_course_task");
         strategy.setNaming(NamingStrategy.underline_to_camel);//数据库表映射到实体的命名策略
         strategy.setTablePrefix(pc.getModuleName() + "_"); //生成实体时去掉表前缀
 

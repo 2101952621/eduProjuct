@@ -4,11 +4,13 @@ package com.xawl.service.edu.controller;
 import com.xawl.service.edu.commonutils.JwtUtils;
 import com.xawl.service.edu.commonutils.R;
 import com.xawl.service.edu.entity.Class;
+import com.xawl.service.edu.entity.ClassCourseTask;
 import com.xawl.service.edu.entity.Course;
 import com.xawl.service.edu.entity.Teacher;
 import com.xawl.service.edu.entity.query.ClassQuery;
 import com.xawl.service.edu.exception.BusinessException;
 import com.xawl.service.edu.service.ClassCourseService;
+import com.xawl.service.edu.service.ClassCourseTaskService;
 import com.xawl.service.edu.service.ClassService;
 import com.xawl.service.edu.service.TeacherService;
 
@@ -17,6 +19,8 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -38,6 +42,9 @@ public class ClassController {
 
     @Autowired
     ClassCourseService classCourseService;
+
+    @Autowired
+    ClassCourseTaskService classCourseTaskService;
 
 
     @ApiOperation("获取所有班级")
@@ -106,7 +113,6 @@ public class ClassController {
                 }
             }
         });
-        System.out.println(row.toString()+ "**************************");
         return R.ok().data("total", total).data("rows", row);
     }
 
@@ -129,17 +135,24 @@ public class ClassController {
 
     }
 
+    private Logger log = LoggerFactory.getLogger(FileController.class);
 
     @GetMapping("/get/byId/{id}")
     public R getClass(
             @PathVariable("id") String id
     ) {
+        log.info("班级id"+ id);
         Class classInfo = classService.getById(id);
         String teacherId = classInfo.getClassTeacherId();
         Teacher teacher = teacherService.getById(teacherId);
         classInfo.setTeacherName(teacher.getName());
         List<Course> listByClassId = classCourseService.getListByClassId(id);
-        return R.ok().data("classInfo", classInfo).data("courseList",listByClassId);
+        log.info("班级课程表信息" + listByClassId);
+        //获取班级作业信息
+        List<ClassCourseTask> list = classCourseTaskService.getTaskByCourseId(id);
+        return R.ok().data("classInfo", classInfo)
+                .data("courseList",listByClassId)
+                .data("classTask",list);
     }
 
     @PostMapping("/update")
